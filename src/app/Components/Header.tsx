@@ -17,7 +17,7 @@ const handleClick = () => {
   handleScrollToTop(); // Scroll to the top first
   setTimeout(() => {
     window.location.reload(); // Reload after smooth scroll
-  }, 500); // Adjust timeout for the scroll duration (300ms)
+  }, 400); // Adjust timeout for the scroll duration (300ms)
 };
 
 const handleScrollToTop = () => {

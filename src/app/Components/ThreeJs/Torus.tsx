@@ -1,9 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-const customTealLight = new THREE.Color("#59C3AA");
-const customTealDark = new THREE.Color("#015A48");
-
 const Experience = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -18,8 +15,9 @@ const Experience = () => {
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ alpha: true }); // Enable transparent background
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0); // Set transparent background color
     containerRef.current.appendChild(renderer.domElement);
 
     // Create TorusGeometry
@@ -29,9 +27,10 @@ const Experience = () => {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        glitchIntensity: { value: 0.1 },
-        gradientStartColor: { value: new THREE.Color(0x0000ff) }, // Blue
-        gradientEndColor: { value: new THREE.Color(0xff0000) }, // Red
+        glitchIntensity: { value: 0.09 },
+        gradientStartColor: { value: new THREE.Color(0xffffff) },
+        gradientEndColor: { value: new THREE.Color(0xffffff) },
+        glitchColor: { value: new THREE.Color(0x181818) },
       },
       vertexShader: `
         varying vec3 vUv;
@@ -46,16 +45,20 @@ const Experience = () => {
         uniform float glitchIntensity;
         uniform vec3 gradientStartColor;
         uniform vec3 gradientEndColor;
+        uniform vec3 glitchColor; 
         varying vec3 vUv;
 
+        float random(vec2 st) {
+          return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+        }
+
         void main() {
-          // Glitch effect
-          float glitch = sin(time * 10.0 + vUv.y * 10.0) * 0.5 + 0.5;
-          float glitchAmount = step(glitchIntensity, glitch);
+          // Random glitch effect based on time and position
+          float glitch = random(vec2(vUv.x * 10.0, time * 0.5)) * step(glitchIntensity, fract(time + vUv.y * 10.0));
           vec3 color = mix(gradientStartColor, gradientEndColor, vUv.y);
 
-          // Apply glitch effect by distorting the color
-          gl_FragColor = vec4(color * glitchAmount, 1.0);
+          // Apply glitch effect by distorting the color with the glitch color
+          gl_FragColor = vec4(mix(color, glitchColor, glitch), 1.0);
         }
       `,
       side: THREE.DoubleSide,

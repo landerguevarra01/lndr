@@ -6,7 +6,7 @@ import Header from "./Components/Header";
 
 export default function Home() {
   return (
-    <div className="flex flex-col overflow-x-hidden">
+    <div className="w-full h-auto flex flex-col overflow-x-hidden">
       <Header />
       <Hero1 />
       {/* <div className="flex flex-col lg:flex-row justify-center items-center border-[1px] border-solid border-white w-screen h-screen">
