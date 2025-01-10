@@ -11,6 +11,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "custom-teal-light": "#59C3AA", 
+        "custom-teal-dark": "#015A48", 
+      },
+      backgroundImage: {
+        "custom-gradient": "linear-gradient(to bottom, #59C3AA, #015A48)",
       },
     },
   },
